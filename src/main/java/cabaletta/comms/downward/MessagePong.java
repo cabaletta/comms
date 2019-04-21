@@ -9,8 +9,11 @@ import java.io.IOException;
 
 /**
  * Example message
+ *
+ * @author leijurv
  */
 public class MessagePong implements iMessage {
+
     public final int sequence;
 
     public MessagePong(DataInputStream in) throws IOException {

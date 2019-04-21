@@ -2,7 +2,11 @@ package cabaletta.comms;
 
 import java.io.*;
 
+/**
+ * @author leijurv
+ */
 public class SerializedConnection implements IConnection {
+
     private final DataInputStream in;
     private final DataOutputStream out;
     private final MessageDeserializer deserializer;

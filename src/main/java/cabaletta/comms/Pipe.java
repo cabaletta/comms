@@ -7,8 +7,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Do you want a socket to localhost without actually making a gross real socket to localhost?
+ *
+ * @author leijurv
  */
 public class Pipe<T extends iMessage> {
+
     private final LinkedBlockingQueue<Optional<iMessage>> AtoB;
     private final LinkedBlockingQueue<Optional<iMessage>> BtoA;
     private final PipedConnection A;

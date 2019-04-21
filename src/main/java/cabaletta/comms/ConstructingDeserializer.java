@@ -9,8 +9,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author leijurv
+ */
 public enum ConstructingDeserializer implements MessageDeserializer {
     INSTANCE;
+
     private final List<Class<? extends iMessage>> MSGS;
 
     ConstructingDeserializer() {

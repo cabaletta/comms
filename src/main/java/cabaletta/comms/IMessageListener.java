@@ -3,7 +3,11 @@ package cabaletta.comms;
 import cabaletta.comms.downward.MessagePong;
 import cabaletta.comms.upward.MessagePing;
 
+/**
+ * @author leijurv
+ */
 public interface IMessageListener {
+
     default void handle(MessagePing message) {
         unhandled(message);
     }

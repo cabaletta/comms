@@ -16,6 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author leijurv
  */
 public class BufferedConnection implements IConnection {
+
     private final IConnection wrapped;
     private final LinkedBlockingQueue<iMessage> queue;
     private volatile transient IOException thrownOnRead;
