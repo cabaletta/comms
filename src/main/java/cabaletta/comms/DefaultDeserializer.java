@@ -4,7 +4,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
- * The default {@link MessageDeserializer} implementation, which
+ * The default {@link MessageDeserializer} implementation, which first reads the input
+ * stream for an unsigned short, indicating the packet id, then attempts to resolve and
+ * construct the packet.
  *
  * @author leijurv, Brady
  */

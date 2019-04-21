@@ -4,8 +4,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * The default {@link MessageSerializer} implementation, which writes a 2 byte unsigned
- * short as a "header" before writing a message, which indicates the ID of the message.
+ * The default {@link MessageSerializer} implementation, which writes a unsigned short
+ * as a "header" before writing a message, which indicates the ID of the message.
  *
  * @author Brady
  */
