@@ -4,6 +4,7 @@ import cabaletta.comms.downward.MessagePong;
 import cabaletta.comms.upward.MessagePing;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -32,6 +33,12 @@ public enum ConstructingDeserializer implements MessageDeserializer {
             throw new IOException("Unknown message type " + type, ex);
         }
     }
+
+    @Override
+    public void writeHeader(DataOutputStream out, iMessage message) throws IOException {
+        out.writeShort(getHeader(message.getClass()));
+    }
+
 
     public int getHeader(Class<? extends iMessage> klass) {
         return MSGS.indexOf(klass) & 0xffff;

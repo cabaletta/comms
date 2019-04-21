@@ -23,7 +23,7 @@ public class SerializedConnection implements IConnection {
 
     @Override
     public synchronized void sendMessage(iMessage message) throws IOException {
-        message.writeHeader(out);
+        deserializer.writeHeader(out, message);
         message.write(out);
     }
 

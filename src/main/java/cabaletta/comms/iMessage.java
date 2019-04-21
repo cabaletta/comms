@@ -13,15 +13,8 @@ import java.io.IOException;
  * @author leijurv
  */
 public interface iMessage {
+
     void write(DataOutputStream out) throws IOException;
-
-    default void writeHeader(DataOutputStream out) throws IOException {
-        out.writeShort(getHeader());
-    }
-
-    default int getHeader() {
-        return ConstructingDeserializer.INSTANCE.getHeader(getClass());
-    }
 
     void handle(IMessageListener listener);
 }
