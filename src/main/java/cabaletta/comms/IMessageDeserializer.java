@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * @author leijurv
  */
-public interface MessageDeserializer {
+public interface IMessageDeserializer {
 
     iMessage deserialize(DataInputStream in) throws IOException;
 }

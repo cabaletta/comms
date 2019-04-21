@@ -4,13 +4,13 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
- * The default {@link MessageDeserializer} implementation, which first reads the input
+ * The default {@link IMessageDeserializer} implementation, which first reads the input
  * stream for an unsigned short, indicating the packet id, then attempts to resolve and
  * construct the packet.
  *
  * @author leijurv, Brady
  */
-public enum DefaultDeserializer implements MessageDeserializer {
+public enum DefaultDeserializer implements IMessageDeserializer {
     INSTANCE;
 
     @Override

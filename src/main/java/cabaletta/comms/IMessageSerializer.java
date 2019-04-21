@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * @author Brady
  */
-public interface MessageSerializer {
+public interface IMessageSerializer {
 
     void write(DataOutputStream out, iMessage message) throws IOException;
 }
