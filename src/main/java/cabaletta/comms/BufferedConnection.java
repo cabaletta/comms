@@ -26,7 +26,7 @@ public class BufferedConnection implements IConnection {
 
     public BufferedConnection(IConnection wrapped, int maxInternalQueueSize) {
         this.wrapped = wrapped;
-        this.queue = new LinkedBlockingQueue<>();
+        this.queue = new LinkedBlockingQueue<>(maxInternalQueueSize);
         this.thrownOnRead = null;
         new Thread(() -> {
             try {
