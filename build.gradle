@@ -7,6 +7,13 @@ compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'it.unimi.dsi:fastutil:8.2.2'
+}
 
 sourceSets {
     main {

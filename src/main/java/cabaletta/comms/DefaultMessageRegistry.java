@@ -2,13 +2,12 @@ package cabaletta.comms;
 
 import cabaletta.comms.downward.MessagePong;
 import cabaletta.comms.upward.MessagePing;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Brady
@@ -16,22 +15,20 @@ import java.util.Map;
 public enum DefaultMessageRegistry {
     INSTANCE;
 
-    private final List<Class<? extends iMessage>> msgs;
-    private final Map<Class<? extends iMessage>, iMessageConstructor> constructors;
+    private final List<Class<? extends iMessage>> msgs = new ArrayList<>();
+    private final Int2ObjectMap<iMessageConstructor<?>> constructors = new Int2ObjectOpenHashMap<>();
 
     DefaultMessageRegistry() {
-        msgs = new ArrayList<>();
-        constructors = new LinkedHashMap<>();
         register(MessagePing.class, MessagePing::new);
         register(MessagePong.class, MessagePong::new);
     }
 
-    public int getId(Class<? extends iMessage> klass) {
-        return msgs.indexOf(klass) & 0xffff;
+    public int getId(Class<? extends iMessage> clazz) {
+        return this.msgs.indexOf(clazz) & 0xffff;
     }
 
     public Class<? extends iMessage> getById(int id) {
-        return msgs.get(id);
+        return this.msgs.get(id);
     }
 
     /**
@@ -43,18 +40,18 @@ public enum DefaultMessageRegistry {
      * @throws IOException If some exception occurred within the message constructor
      */
     public <T extends iMessage> T construct(int id, DataInputStream in) throws IllegalArgumentException, IOException {
-        Class<? extends iMessage> msg = msgs.get(id);
-        if (msg == null) {
+        iMessageConstructor<?> constructor = constructors.get(id);
+        if (constructor == null) {
             throw new IllegalArgumentException("Unknown packet type " + id);
         }
 
         // noinspection unchecked
-        return (T) constructors.get(msgs.get(id)).instantiate(in);
+        return (T) constructor.instantiate(in);
     }
 
     private void register(Class<? extends iMessage> clazz, iMessageConstructor constructor) {
         this.msgs.add(clazz);
-        this.constructors.put(clazz, constructor);
+        this.constructors.put(getId(clazz), constructor);
     }
 
     @FunctionalInterface
