@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Brady
- * @since 4/20/2019
+ * @author leijurv, Brady
  */
 public enum DefaultDeserializer implements MessageDeserializer {
     INSTANCE;

@@ -5,7 +5,6 @@ import java.io.IOException;
 
 /**
  * @author Brady
- * @since 4/20/2019
  */
 public interface MessageSerializer {
 

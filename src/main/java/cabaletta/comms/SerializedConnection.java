@@ -3,6 +3,9 @@ package cabaletta.comms;
 import java.io.*;
 
 /**
+ * A serializer with the capability of utilizing a {@link MessageDeserializer} and
+ * {@link MessageSerializer} to read and write an {@link iMessage}, respectively.
+ *
  * @author leijurv
  */
 public class SerializedConnection implements IConnection {
