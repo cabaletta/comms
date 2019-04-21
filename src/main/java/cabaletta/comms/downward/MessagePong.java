@@ -8,7 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * Example message
+ * Example response
  *
  * @author leijurv
  */
