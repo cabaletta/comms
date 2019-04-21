@@ -21,7 +21,7 @@ public enum ConstructingDeserializer implements MessageDeserializer {
 
     @Override
     public synchronized iMessage deserialize(DataInputStream in) throws IOException {
-        int type = ((int) in.readByte()) & 0xff;
+        int type = in.readUnsignedShort();
         try {
             return MSGS.get(type).getConstructor(DataInputStream.class).newInstance(in);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException ex) {
@@ -29,7 +29,7 @@ public enum ConstructingDeserializer implements MessageDeserializer {
         }
     }
 
-    public byte getHeader(Class<? extends iMessage> klass) {
-        return (byte) MSGS.indexOf(klass);
+    public int getHeader(Class<? extends iMessage> klass) {
+        return MSGS.indexOf(klass) & 0xffff;
     }
 }

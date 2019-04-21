@@ -16,10 +16,10 @@ public interface iMessage {
     void write(DataOutputStream out) throws IOException;
 
     default void writeHeader(DataOutputStream out) throws IOException {
-        out.writeByte(getHeader());
+        out.writeShort(getHeader());
     }
 
-    default byte getHeader() {
+    default int getHeader() {
         return ConstructingDeserializer.INSTANCE.getHeader(getClass());
     }
 
