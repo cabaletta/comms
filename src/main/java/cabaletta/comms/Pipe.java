@@ -75,8 +75,7 @@ public class Pipe<T extends iMessage> {
             try {
                 AtoB.put(Optional.empty()); // unstick threads
                 BtoA.put(Optional.empty());
-            } catch (InterruptedException e) {
-            }
+            } catch (InterruptedException ignored) {}
         }
     }
 }

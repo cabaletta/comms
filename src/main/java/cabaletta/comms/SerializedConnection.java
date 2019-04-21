@@ -32,11 +32,9 @@ public class SerializedConnection implements IConnection {
     public void close() {
         try {
             in.close();
-        } catch (IOException e) {
-        }
+        } catch (IOException ignored) {}
         try {
             out.close();
-        } catch (IOException e) {
-        }
+        } catch (IOException ignored) {}
     }
 }
