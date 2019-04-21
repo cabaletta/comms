@@ -10,21 +10,22 @@ public class SerializedConnection implements IConnection {
     private final DataInputStream in;
     private final DataOutputStream out;
     private final MessageDeserializer deserializer;
+    private final MessageSerializer serializer;
 
     public SerializedConnection(InputStream in, OutputStream out) {
-        this(ConstructingDeserializer.INSTANCE, in, out);
+        this(DefaultDeserializer.INSTANCE, DefaultSerializer.INSTANCE, in, out);
     }
 
-    public SerializedConnection(MessageDeserializer d, InputStream in, OutputStream out) {
+    public SerializedConnection(MessageDeserializer d, MessageSerializer s, InputStream in, OutputStream out) {
         this.in = new DataInputStream(in);
         this.out = new DataOutputStream(out);
         this.deserializer = d;
+        this.serializer = s;
     }
 
     @Override
     public synchronized void sendMessage(iMessage message) throws IOException {
-        deserializer.writeHeader(out, message);
-        message.write(out);
+        serializer.write(out, message);
     }
 
     @Override

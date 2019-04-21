@@ -4,43 +4,37 @@ import cabaletta.comms.downward.MessagePong;
 import cabaletta.comms.upward.MessagePing;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author leijurv
+ * @author Brady
+ * @since 4/20/2019
  */
-public enum ConstructingDeserializer implements MessageDeserializer {
+public enum DefaultDeserializer implements MessageDeserializer {
     INSTANCE;
 
     private final List<Class<? extends iMessage>> MSGS;
 
-    ConstructingDeserializer() {
+    DefaultDeserializer() {
         MSGS = new ArrayList<>();
         MSGS.add(MessagePing.class);
         MSGS.add(MessagePong.class);
     }
 
     @Override
-    public synchronized iMessage deserialize(DataInputStream in) throws IOException {
-        int type = in.readUnsignedShort();
+    public iMessage deserialize(DataInputStream in) throws IOException {
+        int id = in.readUnsignedShort();
         try {
-            return MSGS.get(type).getConstructor(DataInputStream.class).newInstance(in);
+            return MSGS.get(id).getConstructor(DataInputStream.class).newInstance(in);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException ex) {
-            throw new IOException("Unknown message type " + type, ex);
+            throw new IOException("Unknown message type " + id, ex);
         }
     }
 
-    @Override
-    public void writeHeader(DataOutputStream out, iMessage message) throws IOException {
-        out.writeShort(getHeader(message.getClass()));
-    }
-
-
-    public int getHeader(Class<? extends iMessage> klass) {
+    public int getId(Class<? extends iMessage> klass) {
         return MSGS.indexOf(klass) & 0xffff;
     }
 }
