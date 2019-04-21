@@ -1,6 +1,6 @@
 package cabaletta.comms;
 
-import cabaletta.comms.downward.MessagePingResponse;
+import cabaletta.comms.downward.MessagePong;
 import cabaletta.comms.upward.MessagePing;
 
 public interface IMessageListener {
@@ -8,7 +8,7 @@ public interface IMessageListener {
         unhandled(message);
     }
 
-    default void handle(MessagePingResponse message) {
+    default void handle(MessagePong message) {
         unhandled(message);
     }
 

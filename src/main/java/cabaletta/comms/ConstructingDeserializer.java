@@ -1,6 +1,6 @@
 package cabaletta.comms;
 
-import cabaletta.comms.downward.MessagePingResponse;
+import cabaletta.comms.downward.MessagePong;
 import cabaletta.comms.upward.MessagePing;
 
 import java.io.DataInputStream;
@@ -16,7 +16,7 @@ public enum ConstructingDeserializer implements MessageDeserializer {
     ConstructingDeserializer() {
         MSGS = new ArrayList<>();
         MSGS.add(MessagePing.class);
-        MSGS.add(MessagePingResponse.class);
+        MSGS.add(MessagePong.class);
     }
 
     @Override

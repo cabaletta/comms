@@ -10,14 +10,14 @@ import java.io.IOException;
 /**
  * Example message
  */
-public class MessagePingResponse implements iMessage {
+public class MessagePong implements iMessage {
     public final int sequence;
 
-    public MessagePingResponse(DataInputStream in) throws IOException {
+    public MessagePong(DataInputStream in) throws IOException {
         sequence = in.readInt();
     }
 
-    public MessagePingResponse(int sequence) {
+    public MessagePong(int sequence) {
         this.sequence = sequence;
     }
 
