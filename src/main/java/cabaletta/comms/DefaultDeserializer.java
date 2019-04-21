@@ -2,9 +2,10 @@ package cabaletta.comms;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 /**
+ * The default {@link MessageDeserializer} implementation, which
+ *
  * @author leijurv, Brady
  */
 public enum DefaultDeserializer implements MessageDeserializer {
@@ -14,9 +15,9 @@ public enum DefaultDeserializer implements MessageDeserializer {
     public iMessage deserialize(DataInputStream in) throws IOException {
         int id = in.readUnsignedShort();
         try {
-            return DefaultMessageRegistry.INSTANCE.getById(id).getConstructor(DataInputStream.class).newInstance(in);
-        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException ex) {
-            throw new IOException("Unknown message type " + id, ex);
+            return DefaultMessageRegistry.INSTANCE.construct(id, in);
+        } catch (IllegalArgumentException ex) {
+            throw new IOException(ex);
         }
     }
 }
