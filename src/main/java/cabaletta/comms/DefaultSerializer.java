@@ -11,7 +11,7 @@ public enum DefaultSerializer implements MessageSerializer {
 
     @Override
     public void write(DataOutputStream out, iMessage message) throws IOException {
-        out.writeShort(DefaultDeserializer.INSTANCE.getId(message.getClass()));
+        out.writeShort(DefaultMessageRegistry.INSTANCE.getId(message.getClass()));
         message.write(out);
     }
 }
