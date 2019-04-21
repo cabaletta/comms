@@ -40,7 +40,7 @@ public enum DefaultMessageRegistry {
      * @throws IOException If some exception occurred within the message constructor
      */
     public <T extends iMessage> T construct(int id, DataInputStream in) throws IllegalArgumentException, IOException {
-        iMessageConstructor<?> constructor = constructors.get(id);
+        iMessageConstructor<?> constructor = this.constructors.get(id);
         if (constructor == null) {
             throw new IllegalArgumentException("Unknown packet type " + id);
         }
@@ -51,7 +51,7 @@ public enum DefaultMessageRegistry {
 
     private void register(Class<? extends iMessage> clazz, iMessageConstructor constructor) {
         this.msgs.add(clazz);
-        this.constructors.put(getId(clazz), constructor);
+        this.constructors.put(this.getId(clazz), constructor);
     }
 
     @FunctionalInterface
