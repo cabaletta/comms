@@ -44,7 +44,6 @@ public enum DefaultMessageRegistry {
         if (constructor == null) {
             throw new IllegalArgumentException("Unknown packet type " + id);
         }
-
         // noinspection unchecked
         return (T) constructor.instantiate(in);
     }
