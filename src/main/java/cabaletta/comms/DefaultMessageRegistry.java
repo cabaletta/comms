@@ -49,7 +49,7 @@ public enum DefaultMessageRegistry {
         return (T) constructor.instantiate(in);
     }
 
-    private void register(Class<? extends iMessage> clazz, iMessageConstructor constructor) {
+    private <T extends iMessage> void register(Class<T> clazz, iMessageConstructor<T> constructor) {
         this.msgs.add(clazz);
         this.constructors.put(this.getId(clazz), constructor);
     }
