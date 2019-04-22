@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author leijurv
  */
-public class BufferedConnection implements IConnection {
+public class BufferedConnection implements IBufferedConnection {
 
     private final IConnection wrapped;
     private final LinkedBlockingQueue<iMessage> queue;
@@ -58,6 +58,7 @@ public class BufferedConnection implements IConnection {
         thrownOnRead = new EOFException("Closed");
     }
 
+    @Override
     public List<iMessage> receiveMessagesNonBlocking() throws IOException {
         ArrayList<iMessage> msgs = new ArrayList<>();
         queue.drainTo(msgs); // preserves order -- first message received will be first in this arraylist
@@ -68,6 +69,7 @@ public class BufferedConnection implements IConnection {
         return msgs;
     }
 
+    @Override
     public void handleAllPendingMessages(IMessageListener listener) throws IOException {
         receiveMessagesNonBlocking().forEach(msg -> msg.handle(listener));
     }
