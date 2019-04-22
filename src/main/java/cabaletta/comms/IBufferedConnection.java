@@ -11,5 +11,7 @@ public interface IBufferedConnection extends IConnection {
 
     List<iMessage> receiveMessagesNonBlocking() throws IOException;
 
-    void handleAllPendingMessages(IMessageListener listener) throws IOException;
+    default void handleAllPendingMessages(IMessageListener listener) throws IOException {
+        receiveMessagesNonBlocking().forEach(msg -> msg.handle(listener));
+    }
 }

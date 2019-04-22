@@ -60,18 +60,13 @@ public class BufferedConnection implements IBufferedConnection {
 
     @Override
     public List<iMessage> receiveMessagesNonBlocking() throws IOException {
-        ArrayList<iMessage> msgs = new ArrayList<>();
+        List<iMessage> msgs = new ArrayList<>();
         queue.drainTo(msgs); // preserves order -- first message received will be first in this arraylist
         if (msgs.isEmpty() && thrownOnRead != null) {
             IOException up = new IOException("BufferedConnection wrapped", thrownOnRead);
             throw up;
         }
         return msgs;
-    }
-
-    @Override
-    public void handleAllPendingMessages(IMessageListener listener) throws IOException {
-        receiveMessagesNonBlocking().forEach(msg -> msg.handle(listener));
     }
 
     public static BufferedConnection makeBuffered(IConnection conn) {
