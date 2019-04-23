@@ -8,7 +8,7 @@ import java.io.*;
  *
  * @author leijurv
  */
-public class SerializedConnection implements IConnection {
+public class SerializedConnection<S, R> implements IConnection<S, R> {
 
     private final DataInputStream in;
     private final DataOutputStream out;
@@ -27,13 +27,14 @@ public class SerializedConnection implements IConnection {
     }
 
     @Override
-    public synchronized void sendMessage(iMessage message) throws IOException {
+    public synchronized void sendMessage(iMessage<S> message) throws IOException {
         serializer.write(out, message);
     }
 
     @Override
-    public iMessage receiveMessage() throws IOException {
-        return deserializer.deserialize(in);
+    public iMessage<R> receiveMessage() throws IOException {
+        // noinspection unchecked
+        return (iMessage<R>) deserializer.deserialize(in);
     }
 
     @Override

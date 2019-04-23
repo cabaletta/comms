@@ -10,57 +10,57 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author leijurv
  */
-public class Pipe<T extends iMessage> {
+public class Pipe<T, U> {
 
-    private final LinkedBlockingQueue<iMessage> AtoB;
-    private final LinkedBlockingQueue<iMessage> BtoA;
-    private final PipedConnection A;
-    private final PipedConnection B;
+    private final LinkedBlockingQueue<iMessage<T>> AtoB;
+    private final LinkedBlockingQueue<iMessage<U>> BtoA;
+    private final PipedConnection<T, U> A;
+    private final PipedConnection<U, T> B;
     private volatile boolean closed;
 
     public Pipe() {
         this.AtoB = new LinkedBlockingQueue<>();
         this.BtoA = new LinkedBlockingQueue<>();
-        this.A = new PipedConnection(BtoA, AtoB);
-        this.B = new PipedConnection(AtoB, BtoA);
+        this.A = new PipedConnection<>(BtoA, AtoB);
+        this.B = new PipedConnection<>(AtoB, BtoA);
     }
 
-    public PipedConnection getA() {
+    public PipedConnection<T, U> getA() {
         return A;
     }
 
-    public PipedConnection getB() {
+    public PipedConnection<U, T> getB() {
         return B;
     }
 
-    public class PipedConnection implements IConnection {
-        private final LinkedBlockingQueue<iMessage> in;
-        private final LinkedBlockingQueue<iMessage> out;
+    public class PipedConnection<S, R> implements IConnection<S, R> {
+        private final LinkedBlockingQueue<iMessage<R>> in;
+        private final LinkedBlockingQueue<iMessage<S>> out;
 
-        private PipedConnection(LinkedBlockingQueue<iMessage> in, LinkedBlockingQueue<iMessage> out) {
+        private PipedConnection(LinkedBlockingQueue<iMessage<R>> in, LinkedBlockingQueue<iMessage<S>> out) {
             this.in = in;
             this.out = out;
         }
 
         @Override
-        public void sendMessage(iMessage message) throws IOException {
-            if (closed) {
+        public void sendMessage(iMessage<S> message) throws IOException {
+            if (Pipe.this.closed) {
                 throw new EOFException("Closed");
             }
             try {
-                out.put(message);
+                this.out.put(message);
             } catch (InterruptedException e) {
                 // this can never happen since the LinkedBlockingQueues are not constructed with a maximum capacity, see above
             }
         }
 
         @Override
-        public iMessage receiveMessage() throws IOException {
-            if (closed) {
+        public iMessage<R> receiveMessage() throws IOException {
+            if (Pipe.this.closed) {
                 throw new EOFException("Closed");
             }
             try {
-                iMessage t = in.take();
+                iMessage<R> t = this.in.take();
                 if (t instanceof TerminationMessage) {
                     throw new EOFException("Closed");
                 }
@@ -74,11 +74,11 @@ public class Pipe<T extends iMessage> {
 
         @Override
         public void close() {
-            closed = true; // Prevent further messages from being sent and received
+            Pipe.this.closed = true; // Prevent further messages from being sent and received
             try {
                 // Un-stick the threads
-                AtoB.put(TerminationMessage.INSTANCE);
-                BtoA.put(TerminationMessage.INSTANCE);
+                Pipe.this.AtoB.put(TerminationMessage.INSTANCE);
+                Pipe.this.BtoA.put(TerminationMessage.INSTANCE);
             } catch (InterruptedException ignored) {}
         }
     }
@@ -93,6 +93,6 @@ public class Pipe<T extends iMessage> {
         public void write(DataOutputStream out) {}
 
         @Override
-        public void handle(IMessageListener listener) {}
+        public void handle(Object listener) {}
     }
 }

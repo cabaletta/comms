@@ -15,17 +15,17 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author leijurv
  */
-public class BufferedConnection implements IBufferedConnection {
+public class BufferedConnection<S, R> implements IBufferedConnection<S, R> {
 
-    private final IConnection wrapped;
-    private final LinkedBlockingQueue<iMessage> queue;
+    private final IConnection<S, R> wrapped;
+    private final LinkedBlockingQueue<iMessage<R>> queue;
     private volatile transient IOException thrownOnRead;
 
-    public BufferedConnection(IConnection wrapped) {
+    public BufferedConnection(IConnection<S, R> wrapped) {
         this(wrapped, Integer.MAX_VALUE); // LinkedBlockingQueue accepts this as "no limit"
     }
 
-    public BufferedConnection(IConnection wrapped, int maxInternalQueueSize) {
+    public BufferedConnection(IConnection<S, R> wrapped, int maxInternalQueueSize) {
         this.wrapped = wrapped;
         this.queue = new LinkedBlockingQueue<>(maxInternalQueueSize);
         this.thrownOnRead = null;
@@ -43,12 +43,12 @@ public class BufferedConnection implements IBufferedConnection {
     }
 
     @Override
-    public void sendMessage(iMessage message) throws IOException {
+    public void sendMessage(iMessage<S> message) throws IOException {
         wrapped.sendMessage(message);
     }
 
     @Override
-    public iMessage receiveMessage() {
+    public iMessage<R> receiveMessage() {
         throw new UnsupportedOperationException("BufferedConnection can only be read from non-blockingly");
     }
 
@@ -59,8 +59,8 @@ public class BufferedConnection implements IBufferedConnection {
     }
 
     @Override
-    public List<iMessage> receiveMessagesNonBlocking() throws IOException {
-        List<iMessage> msgs = new ArrayList<>();
+    public List<iMessage<R>> receiveMessagesNonBlocking() throws IOException {
+        List<iMessage<R>> msgs = new ArrayList<>();
         queue.drainTo(msgs); // preserves order -- first message received will be first in this arraylist
         if (msgs.isEmpty() && thrownOnRead != null) {
             throw new IOException("BufferedConnection wrapped", thrownOnRead);
@@ -68,11 +68,11 @@ public class BufferedConnection implements IBufferedConnection {
         return msgs;
     }
 
-    public static BufferedConnection makeBuffered(IConnection conn) {
+    public static BufferedConnection makeBuffered(IConnection<?, ?> conn) {
         if (conn instanceof BufferedConnection) {
             return (BufferedConnection) conn;
         } else {
-            return new BufferedConnection(conn);
+            return new BufferedConnection<>(conn);
         }
     }
 }

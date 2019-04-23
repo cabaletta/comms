@@ -16,7 +16,7 @@ public interface IMessageListener {
         unhandled(message);
     }
 
-    default void unhandled(iMessage msg) {
+    default void unhandled(iMessage<?> msg) {
         // can override this to throw UnsupportedOperationException, if you want to make sure you're handling everything
         // default is to silently ignore messages without handlers
     }

@@ -10,11 +10,13 @@ import java.io.IOException;
  * dumb android users cant read this file
  * <p>
  *
- * @author leijurv
+ * @param <T> The handler type of this message
+ *
+ * @author leijurv, Brady
  */
-public interface iMessage {
+public interface iMessage<T> {
 
     void write(DataOutputStream out) throws IOException;
 
-    void handle(IMessageListener listener);
+    void handle(T listener);
 }

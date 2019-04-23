@@ -8,5 +8,5 @@ import java.io.IOException;
  */
 public interface IMessageDeserializer {
 
-    iMessage deserialize(DataInputStream in) throws IOException;
+    iMessage<?> deserialize(DataInputStream in) throws IOException;
 }

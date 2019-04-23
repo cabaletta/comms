@@ -12,7 +12,7 @@ import java.io.IOException;
  *
  * @author leijurv
  */
-public class MessagePing implements iMessage {
+public class MessagePing implements iMessage<IMessageListener> {
 
     public final int sequence;
 

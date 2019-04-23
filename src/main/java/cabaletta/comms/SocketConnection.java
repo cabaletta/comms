@@ -8,7 +8,7 @@ import java.net.Socket;
  *
  * @author leijurv
  */
-public class SocketConnection extends SerializedConnection {
+public class SocketConnection<S, R> extends SerializedConnection<S, R> {
 
     public SocketConnection(Socket s) throws IOException {
         super(s.getInputStream(), s.getOutputStream());
