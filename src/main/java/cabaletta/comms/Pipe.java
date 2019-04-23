@@ -1,8 +1,8 @@
 package cabaletta.comms;
 
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -12,8 +12,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class Pipe<T extends iMessage> {
 
-    private final LinkedBlockingQueue<Optional<iMessage>> AtoB;
-    private final LinkedBlockingQueue<Optional<iMessage>> BtoA;
+    private final LinkedBlockingQueue<iMessage> AtoB;
+    private final LinkedBlockingQueue<iMessage> BtoA;
     private final PipedConnection A;
     private final PipedConnection B;
     private volatile boolean closed;
@@ -34,10 +34,10 @@ public class Pipe<T extends iMessage> {
     }
 
     public class PipedConnection implements IConnection {
-        private final LinkedBlockingQueue<Optional<iMessage>> in;
-        private final LinkedBlockingQueue<Optional<iMessage>> out;
+        private final LinkedBlockingQueue<iMessage> in;
+        private final LinkedBlockingQueue<iMessage> out;
 
-        private PipedConnection(LinkedBlockingQueue<Optional<iMessage>> in, LinkedBlockingQueue<Optional<iMessage>> out) {
+        private PipedConnection(LinkedBlockingQueue<iMessage> in, LinkedBlockingQueue<iMessage> out) {
             this.in = in;
             this.out = out;
         }
@@ -48,7 +48,7 @@ public class Pipe<T extends iMessage> {
                 throw new EOFException("Closed");
             }
             try {
-                out.put(Optional.of(message));
+                out.put(message);
             } catch (InterruptedException e) {
                 // this can never happen since the LinkedBlockingQueues are not constructed with a maximum capacity, see above
             }
@@ -60,11 +60,11 @@ public class Pipe<T extends iMessage> {
                 throw new EOFException("Closed");
             }
             try {
-                Optional<iMessage> t = in.take();
-                if (!t.isPresent()) {
+                iMessage t = in.take();
+                if (t instanceof TerminationMessage) {
                     throw new EOFException("Closed");
                 }
-                return t.get();
+                return t;
             } catch (InterruptedException e) {
                 // again, cannot happen
                 // but we have to throw something
@@ -76,9 +76,23 @@ public class Pipe<T extends iMessage> {
         public void close() {
             closed = true;
             try {
-                AtoB.put(Optional.empty()); // unstick threads
-                BtoA.put(Optional.empty());
+                // Un-stick the threads
+                AtoB.put(TerminationMessage.INSTANCE);
+                BtoA.put(TerminationMessage.INSTANCE);
             } catch (InterruptedException ignored) {}
         }
+    }
+
+    /**
+     * A message passed to the internal receive queues to terminate their operation
+     */
+    private enum TerminationMessage implements iMessage {
+        INSTANCE;
+
+        @Override
+        public void write(DataOutputStream out) {}
+
+        @Override
+        public void handle(IMessageListener listener) {}
     }
 }
