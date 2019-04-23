@@ -74,7 +74,7 @@ public class Pipe<T extends iMessage> {
 
         @Override
         public void close() {
-            closed = true;
+            closed = true; // Prevent further messages from being sent and received
             try {
                 // Un-stick the threads
                 AtoB.put(TerminationMessage.INSTANCE);

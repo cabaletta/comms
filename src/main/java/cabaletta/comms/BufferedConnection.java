@@ -63,8 +63,7 @@ public class BufferedConnection implements IBufferedConnection {
         List<iMessage> msgs = new ArrayList<>();
         queue.drainTo(msgs); // preserves order -- first message received will be first in this arraylist
         if (msgs.isEmpty() && thrownOnRead != null) {
-            IOException up = new IOException("BufferedConnection wrapped", thrownOnRead);
-            throw up;
+            throw new IOException("BufferedConnection wrapped", thrownOnRead);
         }
         return msgs;
     }
