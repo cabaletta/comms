@@ -15,10 +15,6 @@ public class SerializedConnection<S, R> implements IConnection<S, R> {
     private final IMessageDeserializer deserializer;
     private final IMessageSerializer serializer;
 
-    public SerializedConnection(InputStream in, OutputStream out) {
-        this(DefaultDeserializer.INSTANCE, DefaultSerializer.INSTANCE, in, out);
-    }
-
     public SerializedConnection(IMessageDeserializer d, IMessageSerializer s, InputStream in, OutputStream out) {
         this.in = new DataInputStream(in);
         this.out = new DataOutputStream(out);

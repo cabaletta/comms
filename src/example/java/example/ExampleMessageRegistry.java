@@ -1,7 +1,8 @@
-package cabaletta.comms;
+package example;
 
-import cabaletta.comms.downward.MessagePong;
-import cabaletta.comms.upward.MessagePing;
+import cabaletta.comms.iMessage;
+import example.downward.MessagePong;
+import example.upward.MessagePing;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -12,13 +13,13 @@ import java.util.*;
 /**
  * @author Brady
  */
-public enum DefaultMessageRegistry {
+public enum ExampleMessageRegistry {
     INSTANCE;
 
     private final List<Class<? extends iMessage>> msgs = new ArrayList<>();
     private final Int2ObjectMap<iMessageConstructor<?>> constructors = new Int2ObjectOpenHashMap<>();
 
-    DefaultMessageRegistry() {
+    ExampleMessageRegistry() {
         register(MessagePing.class, MessagePing::new);
         register(MessagePong.class, MessagePong::new);
     }

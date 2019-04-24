@@ -1,4 +1,7 @@
-package cabaletta.comms;
+package example;
+
+import cabaletta.comms.IMessageSerializer;
+import cabaletta.comms.iMessage;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,12 +12,12 @@ import java.io.IOException;
  *
  * @author Brady
  */
-public enum DefaultSerializer implements IMessageSerializer {
+public enum ExampleSerializer implements IMessageSerializer {
     INSTANCE;
 
     @Override
     public void write(DataOutputStream out, iMessage message) throws IOException {
-        out.writeShort(DefaultMessageRegistry.INSTANCE.getId(message.getClass()));
+        out.writeShort(ExampleMessageRegistry.INSTANCE.getId(message.getClass()));
         message.write(out);
     }
 }

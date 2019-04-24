@@ -10,7 +10,7 @@ import java.net.Socket;
  */
 public class SocketConnection<S, R> extends SerializedConnection<S, R> {
 
-    public SocketConnection(Socket s) throws IOException {
-        super(s.getInputStream(), s.getOutputStream());
+    public SocketConnection(IMessageDeserializer d, IMessageSerializer s, Socket socket) throws IOException {
+        super(d, s, socket.getInputStream(), socket.getOutputStream());
     }
 }

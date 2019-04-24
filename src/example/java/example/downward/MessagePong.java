@@ -1,6 +1,6 @@
-package cabaletta.comms.upward;
+package example.downward;
 
-import cabaletta.comms.IMessageListener;
+import example.MessageListener;
 import cabaletta.comms.iMessage;
 
 import java.io.DataInputStream;
@@ -8,19 +8,19 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * Example message
+ * Example response
  *
  * @author leijurv
  */
-public class MessagePing implements iMessage<IMessageListener> {
+public class MessagePong implements iMessage<MessageListener> {
 
     public final int sequence;
 
-    public MessagePing(DataInputStream in) throws IOException {
+    public MessagePong(DataInputStream in) throws IOException {
         sequence = in.readInt();
     }
 
-    public MessagePing(int sequence) {
+    public MessagePong(int sequence) {
         this.sequence = sequence;
     }
 
@@ -30,7 +30,7 @@ public class MessagePing implements iMessage<IMessageListener> {
     }
 
     @Override
-    public void handle(IMessageListener listener) {
+    public void handle(MessageListener listener) {
         listener.handle(this);
     }
 }

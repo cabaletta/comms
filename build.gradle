@@ -7,6 +7,12 @@ compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
 
+sourceSets {
+    example {
+        compileClasspath += main.compileClasspath + main.output
+    }
+}
+
 repositories {
     mavenCentral()
 }
