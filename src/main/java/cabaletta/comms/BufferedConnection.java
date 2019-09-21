@@ -18,7 +18,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class BufferedConnection<S, R> implements IBufferedConnection<S, R> {
 
     private final IConnection<S, R> wrapped;
-    private final LinkedBlockingQueue<iMessage<R>> queue;
+    private final LinkedBlockingQueue<IMessage<R>> queue;
     private volatile transient IOException thrownOnRead;
 
     public BufferedConnection(IConnection<S, R> wrapped) {
@@ -43,12 +43,12 @@ public class BufferedConnection<S, R> implements IBufferedConnection<S, R> {
     }
 
     @Override
-    public void sendMessage(iMessage<S> message) throws IOException {
+    public void sendMessage(IMessage<S> message) throws IOException {
         wrapped.sendMessage(message);
     }
 
     @Override
-    public iMessage<R> receiveMessage() {
+    public IMessage<R> receiveMessage() {
         throw new UnsupportedOperationException("BufferedConnection can only be read from non-blockingly");
     }
 
@@ -59,8 +59,8 @@ public class BufferedConnection<S, R> implements IBufferedConnection<S, R> {
     }
 
     @Override
-    public List<iMessage<R>> receiveMessagesNonBlocking() throws IOException {
-        List<iMessage<R>> msgs = new ArrayList<>();
+    public List<IMessage<R>> receiveMessagesNonBlocking() throws IOException {
+        List<IMessage<R>> msgs = new ArrayList<>();
         queue.drainTo(msgs); // preserves order -- first message received will be first in this arraylist
         if (msgs.isEmpty() && thrownOnRead != null) {
             throw new IOException("BufferedConnection wrapped", thrownOnRead);

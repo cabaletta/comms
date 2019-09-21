@@ -8,5 +8,5 @@ import java.io.IOException;
  */
 public interface IMessageSerializer {
 
-    void write(DataOutputStream out, iMessage<?> message) throws IOException;
+    void write(DataOutputStream out, IMessage<?> message) throws IOException;
 }

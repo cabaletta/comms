@@ -14,7 +14,7 @@ import java.io.IOException;
  *
  * @author leijurv, Brady
  */
-public interface iMessage<T> {
+public interface IMessage<T> {
 
     void write(DataOutputStream out) throws IOException;
 

@@ -10,9 +10,9 @@ import java.io.IOException;
  */
 public interface IConnection<S, R> {
 
-    void sendMessage(iMessage<S> message) throws IOException;
+    void sendMessage(IMessage<S> message) throws IOException;
 
-    iMessage<R> receiveMessage() throws IOException;
+    IMessage<R> receiveMessage() throws IOException;
 
     void close();
 }

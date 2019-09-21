@@ -1,7 +1,7 @@
 package example;
 
 import cabaletta.comms.IMessageDeserializer;
-import cabaletta.comms.iMessage;
+import cabaletta.comms.IMessage;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public enum ExampleDeserializer implements IMessageDeserializer {
     INSTANCE;
 
     @Override
-    public iMessage deserialize(DataInputStream in) throws IOException {
+    public IMessage deserialize(DataInputStream in) throws IOException {
         int id = in.readUnsignedShort();
         try {
             return ExampleMessageRegistry.INSTANCE.construct(id, in);

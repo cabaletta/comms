@@ -1,7 +1,7 @@
 package example.upward;
 
 import example.MessageListener;
-import cabaletta.comms.iMessage;
+import cabaletta.comms.IMessage;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,7 +12,7 @@ import java.io.IOException;
  *
  * @author leijurv
  */
-public class MessagePing implements iMessage<MessageListener> {
+public class MessagePing implements IMessage<MessageListener> {
 
     public final int sequence;
 

@@ -1,6 +1,6 @@
 package example;
 
-import cabaletta.comms.iMessage;
+import cabaletta.comms.IMessage;
 import example.downward.MessagePong;
 import example.upward.MessagePing;
 
@@ -17,7 +17,7 @@ public class MessageListener {
         unhandled(message);
     }
 
-    private void unhandled(iMessage<?> msg) {
+    private void unhandled(IMessage<?> msg) {
         // Message isn't handled or doesn't have a handler
     }
 }

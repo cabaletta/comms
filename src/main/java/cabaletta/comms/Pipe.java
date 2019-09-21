@@ -12,8 +12,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class Pipe<T, U> {
 
-    private final LinkedBlockingQueue<iMessage<T>> AtoB;
-    private final LinkedBlockingQueue<iMessage<U>> BtoA;
+    private final LinkedBlockingQueue<IMessage<T>> AtoB;
+    private final LinkedBlockingQueue<IMessage<U>> BtoA;
     private final PipedConnection<T, U> A;
     private final PipedConnection<U, T> B;
     private volatile boolean closed;
@@ -34,16 +34,16 @@ public class Pipe<T, U> {
     }
 
     public class PipedConnection<S, R> implements IConnection<S, R> {
-        private final LinkedBlockingQueue<iMessage<R>> in;
-        private final LinkedBlockingQueue<iMessage<S>> out;
+        private final LinkedBlockingQueue<IMessage<R>> in;
+        private final LinkedBlockingQueue<IMessage<S>> out;
 
-        private PipedConnection(LinkedBlockingQueue<iMessage<R>> in, LinkedBlockingQueue<iMessage<S>> out) {
+        private PipedConnection(LinkedBlockingQueue<IMessage<R>> in, LinkedBlockingQueue<IMessage<S>> out) {
             this.in = in;
             this.out = out;
         }
 
         @Override
-        public void sendMessage(iMessage<S> message) throws IOException {
+        public void sendMessage(IMessage<S> message) throws IOException {
             if (Pipe.this.closed) {
                 throw new EOFException("Closed");
             }
@@ -55,12 +55,12 @@ public class Pipe<T, U> {
         }
 
         @Override
-        public iMessage<R> receiveMessage() throws IOException {
+        public IMessage<R> receiveMessage() throws IOException {
             if (Pipe.this.closed) {
                 throw new EOFException("Closed");
             }
             try {
-                iMessage<R> t = this.in.take();
+                IMessage<R> t = this.in.take();
                 if (t instanceof TerminationMessage) {
                     throw new EOFException("Closed");
                 }
@@ -86,7 +86,7 @@ public class Pipe<T, U> {
     /**
      * A message passed to the internal receive queues to terminate their operation
      */
-    private enum TerminationMessage implements iMessage {
+    private enum TerminationMessage implements IMessage {
         INSTANCE;
 
         @Override

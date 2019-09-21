@@ -4,7 +4,7 @@ import java.io.*;
 
 /**
  * A serializer with the capability of utilizing a {@link IMessageDeserializer} and
- * {@link IMessageSerializer} to read and write an {@link iMessage}, respectively.
+ * {@link IMessageSerializer} to read and write an {@link IMessage}, respectively.
  *
  * @author leijurv
  */
@@ -23,14 +23,14 @@ public class SerializedConnection<S, R> implements IConnection<S, R> {
     }
 
     @Override
-    public synchronized void sendMessage(iMessage<S> message) throws IOException {
+    public synchronized void sendMessage(IMessage<S> message) throws IOException {
         serializer.write(out, message);
     }
 
     @Override
-    public iMessage<R> receiveMessage() throws IOException {
+    public IMessage<R> receiveMessage() throws IOException {
         // noinspection unchecked
-        return (iMessage<R>) deserializer.deserialize(in);
+        return (IMessage<R>) deserializer.deserialize(in);
     }
 
     @Override
