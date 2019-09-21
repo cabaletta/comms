@@ -10,11 +10,9 @@ import example.upward.MessagePing;
 public class ExampleMessageRegistry extends AbstractMessageRegistry {
 
     static final ExampleMessageRegistry INSTANCE = new ExampleMessageRegistry();
-    private ExampleMessageRegistry() {}
 
-    @Override
-    protected void registerMessages() {
-        register(MessagePing.class, MessagePing::new);
-        register(MessagePong.class, MessagePong::new);
+    private ExampleMessageRegistry() {
+        this.register(MessagePing.class, MessagePing::new);
+        this.register(MessagePong.class, MessagePong::new);
     }
 }

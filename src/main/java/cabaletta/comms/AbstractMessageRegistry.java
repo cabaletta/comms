@@ -16,12 +16,6 @@ public abstract class AbstractMessageRegistry {
     private final List<Class<? extends IMessage>> msgs = new ArrayList<>();
     private final Int2ObjectMap<IMessageConstructor<?>> constructors = new Int2ObjectOpenHashMap<>();
 
-    protected AbstractMessageRegistry() {
-        this.registerMessages();
-    }
-
-    protected abstract void registerMessages();
-
     public int getId(Class<? extends IMessage> clazz) {
         return this.msgs.indexOf(clazz) & 0xFFFF;
     }
