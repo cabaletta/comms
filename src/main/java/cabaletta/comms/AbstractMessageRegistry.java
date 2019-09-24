@@ -13,15 +13,29 @@ import java.util.List;
  */
 public abstract class AbstractMessageRegistry {
 
-    private final List<Class<? extends IMessage>> msgs = new ArrayList<>();
+    private final List<Class<? extends IMessage<?>>> messages = new ArrayList<>();
     private final Int2ObjectMap<IMessageConstructor<?>> constructors = new Int2ObjectOpenHashMap<>();
 
-    public int getId(Class<? extends IMessage> clazz) {
-        return this.msgs.indexOf(clazz) & 0xFFFF;
+    /**
+     * Returns the ID of a message given the message's class.
+     *
+     * @param clazz The class of the message
+     * @return The ID for the message
+     */
+    public int getId(Class<? extends IMessage<?>> clazz) {
+        return this.messages.indexOf(clazz) & 0xFFFF;
     }
 
-    public Class<? extends IMessage> getById(int id) {
-        return this.msgs.get(id);
+    /**
+     * Returns the class of the message associated with the specified id.
+     * The return value will be {@code null} if the ID does not have a
+     * corresponding message.
+     *
+     * @param id The ID of the message
+     * @return The class for the message ID
+     */
+    public Class<? extends IMessage<?>> getById(int id) {
+        return this.messages.get(id);
     }
 
     /**
@@ -32,7 +46,7 @@ public abstract class AbstractMessageRegistry {
      * @throws IllegalArgumentException If the specified id was invalid
      * @throws IOException If some exception occurred within the message constructor
      */
-    public <T extends IMessage> T construct(int id, DataInputStream in) throws IllegalArgumentException, IOException {
+    public <T extends IMessage<?>> T construct(int id, DataInputStream in) throws IllegalArgumentException, IOException {
         IMessageConstructor<?> constructor = this.constructors.get(id);
         if (constructor == null) {
             throw new IllegalArgumentException("Unknown packet type " + id);
@@ -41,14 +55,21 @@ public abstract class AbstractMessageRegistry {
         return (T) constructor.instantiate(in);
     }
 
-    protected <T extends IMessage> void register(Class<T> clazz, IMessageConstructor<T> constructor) {
-        this.msgs.add(clazz);
-        this.constructors.put(this.getId(clazz), constructor);
-    }
-
-    @FunctionalInterface
-    public interface IMessageConstructor<T extends IMessage> {
-
-        T instantiate(DataInputStream in) throws IOException;
+    /**
+     * Registers a new message to this {@link AbstractMessageRegistry}. If the specified class already
+     * exists in the {@link #messages} list, then the new constructor will not override the old one, and
+     * {@code false} will be returned. Otherwise, {@code true} will be returned.
+     *
+     * @param clazz The message type
+     * @param constructor A constructor for the message
+     * @return Whether or not the message was successfully registered
+     */
+    protected <T extends IMessage<?>> boolean register(Class<T> clazz, IMessageConstructor<T> constructor) {
+        if (!this.messages.contains(clazz)) {
+            this.messages.add(clazz);
+            this.constructors.put(this.getId(clazz), constructor);
+            return true;
+        }
+        return false;
     }
 }
